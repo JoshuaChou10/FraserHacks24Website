@@ -7,7 +7,16 @@ import Footer from "../components/Footer";
 import Description from "../components/Description";
 import Attendance from "@/src/pages/attendance";
 
+
+// 2) Import getServerSession + NextAuth config (authOptions)
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+// 3) Mark this as an async Server Component to fetch session
 export default async function Home() {
+  // 4) Fetch session on the server
+  const session = await getServerSession(authOptions);
+
+  
   return (
       <main className="min-h-screen flex flex-col items-center justify-start p-7 space-y-12 bg-black">
         <div id="home" className="mt-20">
@@ -68,18 +77,19 @@ export default async function Home() {
         </div>
 
         {/* Attendance Section with Visual Separator */}
-        <div className="w-full max-w-4xl my-12">
-          <div className="flex items-center justify-center space-x-4 mb-8">
-            <div className="flex-grow border-t border-gray-700"></div>
-            <h2 className="text-2xl font-bold text-white px-4 bg-black">
-              Attendance
-            </h2>
-            <div className="flex-grow border-t border-gray-700"></div>
-          </div>
-          <div id="attendance" className="w-full">
-            <Attendance />
-          </div>
+      <div className="w-full max-w-4xl my-12">
+        <div className="flex items-center justify-center space-x-4 mb-8">
+          <div className="flex-grow border-t border-gray-700"></div>
+          <h2 className="text-2xl font-bold text-white px-4 bg-black">
+            Attendance
+          </h2>
+          <div className="flex-grow border-t border-gray-700"></div>
         </div>
+        <div id="attendance" className="w-full">
+          {/* 5) Pass the session to Attendance as a prop */}
+          <Attendance session={session} />
+        </div>
+      </div>
 
         <Footer />
       </main>
